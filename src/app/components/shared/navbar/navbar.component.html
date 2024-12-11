@@ -1,0 +1,9 @@
+<div class="w-full p-2 bg-orange-700 flex flex-row justify-center gap-4 z-30 relative">
+    @for(ruta of rutasPagina; track ruta){
+    <a href="{{ruta.url}}"
+        class="p-2 hover:underline hover:decoration-2 hover:decoration-white hover:underline-offset-8 active:underline active:decoration-2 active:decoration-white active:underline-offset-8">
+        {{ruta.nombre}}
+    </a>
+
+    }
+</div>

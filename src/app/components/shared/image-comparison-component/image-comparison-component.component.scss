@@ -1,0 +1,39 @@
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 500px; /* Ajusta la altura de acuerdo a tus necesidades */
+    overflow: hidden;
+  }
+  
+  .image-wrapper {
+    position: relative;
+    height: 100%;
+    display: flex;
+  }
+  
+  .image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .image-2 {
+    opacity: 0; /* Imagen inicial oculta */
+  }
+  
+  .slider {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 5px; /* Ancho de la línea divisoria */
+    height: 100%;
+    background-color: black;
+    cursor: ew-resize;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+  

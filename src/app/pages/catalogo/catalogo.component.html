@@ -1,0 +1,104 @@
+<div class="flex w-full min-h-screen flex-col items-center">
+    <h1 class="text-[80px] font-bold text-gray-800 mt-12">Nuestros productos</h1>
+    <div class="flex flex-row gap-8 p-8 w-full p-[5%]">
+        <div class="flex flex-col w-full md:w-1/2 p-4">
+            <!-- Título -->
+            <h1 class="text-4xl font-bold text-gray-800 text-left mt-4 mb-4">
+                ¡Descubre el Nuevo Sky300!
+            </h1>
+
+            <!-- Descripción inicial -->
+            <p class="text-xl text-gray-600 text-left mt-2 mb-2">
+                El modelo de última generación con el procesador R23F. ¡La tecnología más avanzada para mejorar tu
+                rendimiento!
+            </p>
+
+            <!-- Detalles adicionales -->
+            <p class="text-lg text-gray-500 text-left mt-2 mb-2">
+                Experimenta velocidad, potencia y diseño en su máxima expresión. ¡No te quedes atrás!
+            </p>
+
+
+            <!-- Características destacadas -->
+            <div class="mt-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Características Clave</h2>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                    <li>Procesador R23F de última generación</li>
+                    <li>Pantalla Full HD 6.5” de alta definición</li>
+                    <li>Cámara de 48 MP para fotos nítidas</li>
+                    <li>Capacidad de batería de 5000 mAh para todo el día</li>
+                    <li>5G para una conectividad ultrarrápida</li>
+                </ul>
+            </div>
+            <p class="text-lg text-gray-500 text-left mt-6 mb-6">
+                Disfruta la experiencia desde 399 Euros.
+            </p>
+
+
+        </div>
+
+        <div class="flex justify-center items-center w-1/2">
+            <p>Aqui iria la imagen</p>
+        </div>
+    </div>
+
+
+    <div class="flex flex-row-reverse gap-8 p-8 bg-gray-100 w-full p-[5%]">
+        <div class="flex flex-col w-full md:w-1/2 p-4">
+            <h1 class="text-4xl font-bold text-gray-800 text-left mt-4 mb-4">
+                ¡Presentamos el Nuevo VibeX200!
+            </h1>
+
+            <!-- Descripción inicial -->
+            <p class="text-xl text-gray-600 text-left mt-2 mb-2">
+                Con el revolucionario chip Vortex X, el VibeX200 redefine el concepto de velocidad y rendimiento. ¡Lleva
+                tu experiencia móvil al siguiente nivel!
+            </p>
+
+            <!-- Detalles adicionales -->
+            <p class="text-lg text-gray-500 text-left mt-2 mb-2">
+                Disfruta de una pantalla infinita, un diseño ultradelgado y una conectividad 5G de alta velocidad. ¡El
+                futuro está aquí!
+            </p>
+
+            <!-- Características destacadas -->
+            <div class="mt-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Características Clave</h2>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                    <li>Chip Vortex X para un rendimiento imbatible</li>
+                    <li>Pantalla AMOLED 7” con tasa de refresco de 120Hz</li>
+                    <li>Cámara cuádruple de 64 MP para fotos excepcionales</li>
+                    <li>Batería de 6000 mAh con carga rápida de 65W</li>
+                    <li>5G Ultra Rápido para streaming y juegos sin interrupciones</li>
+                </ul>
+            </div>
+
+            <!-- Precio -->
+            <p class="text-lg text-gray-500 text-left mt-6 mb-6">
+                Vive la experiencia VibeX desde 499 Euros.
+            </p>
+
+
+        </div>
+
+        <div class="flex justify-center items-center w-1/2">
+            <p>Aqui iria la imagen</p>
+        </div>
+
+    </div>
+
+    <p class="text-[80px] font-bold text-gray-800 mt-12">¡Compara nuestros modelos!</p>
+    <div class="mb-4 w-full flex justify-center">
+        <article>
+            <shared-image-comparison-component></shared-image-comparison-component>
+        </article>
+    </div>
+    <div class="mb-4 w-full flex justify-center">
+
+        <!-- Botón de llamada a la acción -->
+        <button [routerLink]="['/configurador']"
+            class="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-3 rounded-full text-lg font-semibold hover:bg-gradient-to-l transition duration-1000 mt-6 p-5 mb-2 w-[30%]">
+            Configura el tuyo
+        </button>
+    </div>
+</div>
