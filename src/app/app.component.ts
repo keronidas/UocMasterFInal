@@ -5,6 +5,7 @@ import { OrbitControls } from '@avatsaev/three-orbitcontrols-ts';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { AmbientLight, DirectionalLight, MeshBasicMaterial } from 'three';
 import * as dat from 'dat.gui';  // Importar dat.GUI
+import { color } from 'three/webgpu';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +18,10 @@ export class AppComponent implements OnInit {
   @ViewChild('canvasContainer', { static: true }) canvasContainer!: ElementRef;
   renderer!: THREE.WebGLRenderer;
   scene!: THREE.Scene;
+  debugObject = { color: 0xff12ae }; // Objeto para el color del móvil
+  nuevoMaterial = new THREE.MeshStandardMaterial({ color: this.debugObject.color }); // Material del móvil
+  directionalLightFront = new DirectionalLight(this.debugObject.color, 1);
+  directionalLightBack = new DirectionalLight(this.debugObject.color, 1);
 
   // Variables para el plano
   plane: THREE.Mesh | undefined;
@@ -36,21 +41,24 @@ export class AppComponent implements OnInit {
 
       // Crear la escena
       this.scene = new THREE.Scene();
-      this.scene.background = new THREE.Color('white');  // Fondo blanco
+      this.scene.background = new THREE.Color('lightgray');  // Fondo blanco
 
       // Luz ambiental (para iluminar el modelo)
-      const ambientLight = new AmbientLight(0x404040, 1); // Luz suave
+      const ambientLight = new AmbientLight(0x404040, 5); // Luz suave
       this.scene.add(ambientLight);
 
       // Luz direccional (luz principal)
-      const directionalLight = new DirectionalLight(0xffffff, 1);
-      directionalLight.position.set(5, 5, 5).normalize();
-      directionalLight.castShadow = true; // Habilitar sombras en la luz direccional
-      this.scene.add(directionalLight);
+      this.directionalLightFront.position.set(2, 2, 2).normalize();
+      this.directionalLightFront.castShadow = true; // Habilitar sombras en la luz direccional
+      this.scene.add(this.directionalLightFront);
+
+      this.directionalLightBack.position.set(-2, -2, -2).normalize();
+      this.directionalLightBack.castShadow = true; // Habilitar sombras en la luz direccional
+      this.scene.add(this.directionalLightBack);
 
       // Cámara
       const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(10, 10, 10);
+      camera.position.set(0, 4, 0);
       this.scene.add(camera);
 
       // Controles de órbita
@@ -58,7 +66,7 @@ export class AppComponent implements OnInit {
       controls.enableDamping = true;
       controls.dampingFactor = 0.1;
       controls.rotateSpeed = 0.05;
-      controls.zoomSpeed = 0.1;
+      controls.zoomSpeed = 0.8;
       controls.minPolarAngle = Math.PI / 2.15;  // Limita la rotación hacia arriba
       controls.maxPolarAngle = Math.PI / 2.15;  // Limita la rotación hacia abajo
 
@@ -69,19 +77,19 @@ export class AppComponent implements OnInit {
         (gltf) => {
           const model = gltf.scene;
           model.scale.set(2, 2, 2); // Escala el modelo
-          model.rotation.x = Math.PI / 2.15; // Ajusta la rotación
 
           // Ajustar materiales del modelo
-          const nuevoMaterial = new THREE.MeshMatcapMaterial({ color: 'red' });
           model.traverse((child) => {
             if (child instanceof THREE.Mesh) {
               if (child.material && child.material.color) {
-                child.material = nuevoMaterial;
+                child.material = this.nuevoMaterial;
                 child.castShadow = true; // Proyectar sombras
                 child.receiveShadow = true; // Recibir sombras
               }
             }
           });
+
+
 
           // Cargar la imagen
           const textureLoader = new THREE.TextureLoader();
@@ -89,12 +97,11 @@ export class AppComponent implements OnInit {
             '/assets/images/OpenOfice2.png', // Ruta de la imagen
             (imageTexture) => {
               console.log('Imagen cargada correctamente'); // Verifica si se carga
-              const planeGeometry = new THREE.PlaneGeometry(1, 1); // Tamaño del plano
-              const planeMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true });
+              const planeGeometry = new THREE.PlaneGeometry(1.8, 3.6); // Tamaño del plano
+              const planeMaterial = new THREE.MeshBasicMaterial({ map: imageTexture, transparent: true, side: THREE.DoubleSide });
               this.plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
               // Posicionar el plano sobre el modelo
-              this.plane.position.set(0, 2, 0); // Ajusta la posición
+              this.plane.position.set(0, 0.15, -0.3); // Ajusta la posición
               this.plane.rotation.x = -Math.PI / 2; // Rotar el plano si es necesario
 
               this.plane.castShadow = true; // Habilitar sombras en el plano
@@ -104,29 +111,32 @@ export class AppComponent implements OnInit {
               const group = new THREE.Group();
               group.add(model);
               group.add(this.plane);
-
+              group.rotation.x = Math.PI / 2.15; // Ajusta la rotación
               // Añadir el grupo a la escena
               this.scene.add(group);
               console.log('Imagen aplicada correctamente');
 
               // Crear el GUI una vez que el plano esté disponible
               const gui = new dat.GUI();
-              const planeFolder = gui.addFolder('Plano');
-              planeFolder.add(this.plane.position, 'x', -5, 5).name('Posición X');
-              planeFolder.add(this.plane.position, 'y', -5, 5).name('Posición Y');
-              planeFolder.add(this.plane.position, 'z', -5, 5).name('Posición Z');
-              
-              // Para las rotaciones, el rango va de -Math.PI a Math.PI
-              planeFolder.add(this.plane.rotation, 'x', -Math.PI, Math.PI).name('Rotación X');
-              planeFolder.add(this.plane.rotation, 'y', -Math.PI, Math.PI).name('Rotación Y');
-              planeFolder.add(this.plane.rotation, 'z', -Math.PI, Math.PI).name('Rotación Z');
-              
-              // Para la escala
-              planeFolder.add(this.plane.scale, 'x', 0.1, 5).name('Escala X');
-              planeFolder.add(this.plane.scale, 'y', 0.1, 5).name('Escala Y');
-              planeFolder.add(this.plane.scale, 'z', 0.1, 5).name('Escala Z');
-              
-              planeFolder.open();
+
+              // Crea un objeto para el color, que será modificado por el GUI
+
+
+              // Crea una carpeta para el móvil y añade el selector de color
+              gui.addColor(this.debugObject, 'color')
+                .onChange(() => {
+                  this.nuevoMaterial.color.set(this.debugObject.color)
+                  this.directionalLightBack.color.set(this.debugObject.color);
+                  this.directionalLightFront.color.set(this.debugObject.color);
+                })
+              gui.add(this.directionalLightFront, 'intensity', 0, 10).name('Luz frontal');
+              gui.add(this.directionalLightBack, 'intensity', 0, 10).name('Luz trasera');
+              gui.add(this.directionalLightBack.position, 'x', -10, 10).name('Luz trasera X');
+              gui.add(this.directionalLightBack.position, 'y', -10, 10).name('Luz trasera Y');
+              gui.add(this.directionalLightBack.position, 'z', -10, 10).name('Luz trasera Z');
+
+              gui.open();
+
             },
             undefined, // Progreso (si lo necesitas)
             (error) => {
@@ -141,6 +151,16 @@ export class AppComponent implements OnInit {
           console.error('Error al cargar el modelo:', error);
         }
       );
+      // Crear una luz de área
+      const rectLight = new THREE.RectAreaLight(0xffffff, 5, 10, 5);  // Color, intensidad, ancho y alto
+      rectLight.position.set(0, 5, 0);  // Posicionar la luz
+
+      // Crear un objeto para visualizar la luz (es común hacerlo con una malla)
+
+
+      // Añadir la luz de área a la escena
+      this.scene.add(rectLight);
+
 
       // Animar la escena
       const animate = () => {
